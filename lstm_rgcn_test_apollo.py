@@ -35,8 +35,8 @@ torch.backends.cudnn.deterministic = True
 torch.backends.cudnn.benchmark = False
 
 if __name__ == '__main__':
-    data_dir = '../../lstm_graphs_apollo/'
-    use_cuda = 1
+    data_dir = './lstm_graphs_apollo/'
+    use_cuda = 0
     if use_cuda:
             torch.cuda.set_device(0)
 
