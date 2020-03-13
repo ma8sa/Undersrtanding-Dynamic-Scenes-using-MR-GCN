@@ -57,12 +57,12 @@ python3 rel-att-gcn_train.py		   # for training the complete model
 python3 MRGCN_test_apollo.py		   # for testing trained model
 python3 MRGCN_train_apollo.py		   # for training the complete model
 
---MRGCN+LSTM
+--MRGCN-LSTM
 python3 lstm_rgcn_test_apollo.py       # for testing trained model
 python3 lstm_rgcn_train_apollo.py      # for training the complete model
 
 ```
-**NOTE** : Make sure to extract the corresponding graphs (*graphs_apollo*) and place it in the same folder where you are running the code from.
+**NOTE** : Make sure to extract the corresponding graphs (*graphs_apollo* for MRGCN and Rel-Att-Gcn and *lstm_graphs_apollo* for MRGCN-LSTM) and place it in the same folder where you are running the code from.
 
 In training, *rel-att-gcn_train.py* has all the parameters to tune. *main_model.py* contains the complete model. *rgcn_layer.py* contains the MR-GCN layer implemented using attention. *graphs_preproc_apollo.py* conatains all the data preprocessing methods used. 
 
@@ -122,7 +122,7 @@ Different embeddings are given based on nature of object (car/lane). The embeddi
 Our model outperforms it due to one main reason, lack of sophisticated graphical structure as in MR-GCN where information is based only on relations a node exhibits.  
 
 
-| Method  | St-RNN | MRGCN +<br> LSTM | MRGCN | Rel-Att-GCN | 
+| Method  | St-RNN | MRGCN -<br> LSTM | MRGCN | Rel-Att-GCN | 
 | ------------- | ------------ | ------------| -------------| -------------|
 | Moving away  | 76  |	85 | 94 | 95 |
 | moving towards us  | 51 |	89 | 95 | 99 |
