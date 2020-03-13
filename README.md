@@ -76,6 +76,8 @@ for kitti,
 python3 transfer_testing.py kitti
 ```
 **NOTE** : Make sure to extract the corresponding graphs (*graphs_kitti* for **kitti** and *graphs_indian* for **indian** and *graphs_honda* for **Honda**) and place it in the same folder where you are running the *transfer_testing.py* code from.
+
+To find data for MRGCN-LSTM on all datasets please go through [Temporal-MRGCN](https://github.com/ma8sa/temporal-MR-GCN)
 ### RESULTS
 ---------
 0->Move forward<br />
