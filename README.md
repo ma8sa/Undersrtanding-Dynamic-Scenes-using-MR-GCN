@@ -47,9 +47,20 @@ And set *use_cuda = 1* in training/testing codes.
 ## Training and Testing on Apollo dataset 
 ```
 git clone https://github.com/ma8sa/Undersrtanding-Dynamic-Scenes-using-MR-GCN.git
-cd temporal-MR-GCN
-python3 rel-att-gcn_test.py			# for testing trained model
-python3 rel-att-gcn_train.py		# for training the complete model
+Undersrtanding-Dynamic-Scenes-using-MR-GCN
+
+--Relational attention
+python3 rel-att-gcn_test.py			   # for testing trained model
+python3 rel-att-gcn_train.py		   # for training the complete model
+
+--MRGCN
+python3 MRGCN_test_apollo.py		   # for testing trained model
+python3 MRGCN_train_apollo.py		   # for training the complete model
+
+---MRGCN+LSTM
+python3 lstm_rgcn_test_apollo.py       # for testing trained model
+python3 lstm_rgcn_train_apollo.py      # for training the complete model
+
 ```
 **NOTE** : Make sure to extract the corresponding graphs (*graphs_apollo*) and place it in the same folder where you are running the code from.
 
