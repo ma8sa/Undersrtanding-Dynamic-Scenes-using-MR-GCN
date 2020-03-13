@@ -42,7 +42,7 @@ if(data_set=='Indian'):
 
 
 ######################### mian part of the function #######################
-use_cuda = 1
+use_cuda = 0
 if use_cuda:
         torch.cuda.set_device(0)
 
@@ -66,17 +66,13 @@ best_acc = 0
 split_ratio = 0.7
 print("train and val split...... creating val and train seperate sequences")
 
-# [train_idx , train_idx_nodes ,trainset , testset,count_class_train,count_class_val,count_train_overall]= create_dataset(num_classes,data_dir,use_cuda)
 print("total epochs = ",num_epochs)
 for epoch in range(num_epochs):
     if(epoch%250 == 0):
         if(epoch > 0):
             print("###################################")
             print(avg_acc_train/250,avg_acc_val/250,best_acc)
-            # checkpoint = {'model': best_model,
-            #           'state_dict': best_model.state_dict(),
-            #           'optimizer' : optimizer.state_dict()}
-            # torch.save(checkpoint, wts_dir+'best_model_'+str(epoch)+'_'+str(best_acc)+'_'+str(class_acc[0])+'_'+str(class_acc[1])+'_'+str(class_acc[2])+'.pth')
+
         avg_acc_train=0
         avg_acc_val=0
         best_acc = 0
@@ -90,54 +86,24 @@ for epoch in range(num_epochs):
             model.cuda()
         for param in model.parameters():
             print(param.shape)        
-        print("created new model")
         if(epoch==0):
             [train_idx , train_idx_nodes ,trainset , testset,count_class_train,count_class_val,count_train_overall]= create_dataset(num_classes,data_set,data_dir,split_ratio,2,use_cuda)
         
-        # if(epoch==0):
-        # [train_idx , train_idx_nodes ,trainset , testset,count_class_train,count_class_val,count_train_overall]= create_dataset(num_classes,data_dir,1,use_cuda)
-        # print("train and val split...... creating batches")
+
         [data_loader,test_loader] = create_batch(trainset,testset)
         print("created data")
         whts=[]     
 
-        #(N-C)/N type
-        # for i in range(num_classes):
-        #         whts.append(((train_idx_nodes-count_train_overall[i])/train_idx_nodes))
-
-        # whts[-1] *= 4.0
-        # whts[-2] *= 1.2
-        # whts[-3] *= 1.2
-        # whts[1] *= 1.2
-
-        # whts[1]  += 2.0
-        # whts[2] *= 1.2
-        # whts[3] += 2.0
-        # whts[-1] += 2.0
-        # whts[-2] += 2.0
-
-        #N/C type
-        # for i in range(num_classes):
-        #     whts.append(train_idx_nodes/count_train_overall[i])
-        
-        # for i in range(4):
-        #         whts.append( 10*(train_idx_nodes-count_train_overall[-1]-count_train_overall[i])/(train_idx_nodes-count_train_overall[-1]))
-        # whts.extend([0.0])
-            
-        #N/class type of whts
-        # for i in range(3):
-        #     whts.append((train_idx_nodes-count_train_overall[-1])/count_train_overall[i])
-        # whts.extend([1.0,1.0,1.0,1.0,1.0])
+        (N-C)/N type
+        for i in range(num_classes):
+                whts.append(((train_idx_nodes-count_train_overall[i])/train_idx_nodes))
 
         print('\n')
-        print(count_class_train)
-        print(count_class_val)
-        print(count_train_overall)
+        print("calss counts :",count_class_val)
         print('\n')
     
         whts = torch.from_numpy(np.array(whts))
         whts = whts.float()
-        print("original whts ",whts)
 
         optimizer = optim.Adam(model.parameters(), lr=0.001,weight_decay=1e-3)
         scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min',min_lr=0.0001,patience=5,verbose =True)       
@@ -145,9 +111,8 @@ for epoch in range(num_epochs):
             whts = whts.cuda()
             model.cuda()
         print("Using weights on cuda")
-        # loss_func = torch.nn.NLLLoss(weight=whts)
-        # loss_func = nn.CrossEntropyLoss(weight=whts)
-        loss_func = nn.CrossEntropyLoss()
+        loss_func = nn.CrossEntropyLoss(weight=whts)
+        # loss_func = nn.CrossEntropyLoss()
 
     
     model.train()
@@ -182,23 +147,16 @@ for epoch in range(num_epochs):
         curr_nodes2 = bg.ndata['id']
         curr_nodes = curr_nodes2.to('cpu')
         
-        # print(len(curr_nodes))
-        # if(len(curr_nodes)>=80 or len(curr_nodes)<=2):
-        #     counter += 1
-            # print("skipping")
-            # continue
-
         del(curr_nodes2)
 
         nodes_fts.extend(curr_nodes)
         prediction = model(bg)
-        
-        # print( "labels" , label.shape)
-        # print( "prediction" , prediction.shape)
-        label=label.cuda()
 
-        # print(prediction)
+        if(use_cuda):
+        	label=label.cuda()
+
         loss2 = loss_func(prediction,label)
+
         # optimizer.zero_grad()
         # loss2.backward()
         # optimizer.step()
@@ -213,9 +171,7 @@ for epoch in range(num_epochs):
         del(prediction)
         torch.cuda.empty_cache()
 
-        # train_list = list( range(len(prediction2)) )
         results = prediction2.argmax(dim=1)
-        # update_tendency(results,label2,nodes_fts,tendency)      
         
         #For total accuracies
         for k in range(len(results)):
@@ -234,11 +190,6 @@ for epoch in range(num_epochs):
                 train_class_cnts[label2[k].item()] += 1
 
 
-    # print(iter,epoch_loss)
-    # epoch_loss /= (iter + 1)
-    # train_acc = train_crct / train_cntr
-    # avg_acc_train += train_acc
-
     #FOR VALIDATION PART
     # model.to('cpu')
     model.eval()
@@ -255,9 +206,9 @@ for epoch in range(num_epochs):
         nodes_fts.extend(curr_nodes)
 
         prediction = model(bg)
-        # print( "labels" , label.shape)
-        # print( "prediction" , prediction.shape)
-        label=label.cuda()
+        
+        if(use_cuda):
+        	label=label.cuda()
 
         loss2 = loss_func(prediction, label)
         loss = loss2.to('cpu')
@@ -336,13 +287,10 @@ for epoch in range(num_epochs):
     val_loss /= (iter+1)
     val_acc = val_crct / val_cntr
     avg_acc_val += val_acc
-    print("skipped ",counter)
-    #getting tendency percentages
 
     print('---------------------------------------------------------------------------------------------')
     print("Epoch {:05d} | ".format(epoch) +
           " Validation Accuracy: {:.4f} | Validation Loss: {:.4f} ".format(val_acc,val_loss))
-    # print("0: {:.2f} ".format(tendency[0]) + "| Train Loss: {:.4f} |  Validation Accuracy: {:.4f} | Validation Loss: {:.4f} ".format(train_acc, epoch_loss,val_acc,val_loss))
 
     train_class_crcts =np.array(train_class_crcts)
     train_class_cnts =np.array(train_class_cnts)
@@ -353,52 +301,9 @@ for epoch in range(num_epochs):
     train_cl_ac = train_class_crcts/train_class_cnts
     val_cl_ac   = val_class_crcts/val_class_cnts
     print("calss accrs",val_cl_ac)
-    # if(val_acc>=0.5):
-    # #     # flag = 1
-    # #     # for f in range(num_classes):
-    # #     #     if(class_acc[f] < val_cl_ac[f]):
-    # #     #         flag = 0
-    # #     #         break
-    # #     # if(flag==0):
-    #     best_acc=val_acc
-    #     # print('here')
-    #     best_model = model
-    #     checkpoint = {'model': best_model,
-    #               'state_dict': best_model.state_dict(),
-    #               'optimizer' : optimizer.state_dict()}
-    #     torch.save(checkpoint, wts_dir+'best_model_'+str(epoch)+'_'+str(best_acc)+'_'+str(val_cl_ac[0])+'_'+str(val_cl_ac[1])+'_'+str(val_cl_ac[2])+'.pth')
 
-    # y_actu = pd.Series(cf_matrix_labels_val, name='Actual')
-    # y_pred = pd.Series(cf_matrix_pred_val, name='Predicted')
-    
-    # y_actu = [ys.item() for ys in y_actu]
-    # y_pred = [ys.item() for ys in y_pred]
-
-    # y_actu = np.array(y_actu)
-    # y_pred = np.array(y_pred)
-    
-    # cf_matrix_val = pd.crosstab(y_actu,y_pred,rownames=['Actual'], colnames=['Predicted'])
-
-    # # cf_matrix_val = pd.crosstab(y_actu,y_pred,margins=True)
-    # # cf_matrix_norm_val = cf_matrix_val / cf_matrix_val.sum(axis=1)
-    #     # file_name = conf_train_dir +str(epoch)+'.npy'
-    # # np.save(file_name,cf_matrix_train.values)
-
-    # file_name = conf_val_dir +str(epoch)+'.npy'
-    # np.save(file_name,cf_matrix_val)
-
-    # cf_matrix_train.to_pickle(file_name)
-    # cf_matrix_val.to_pickle(file_name)
-
-
-    #     for f in range(num_classes):
-    #         if(class_acc[f] < val_cl_ac[f]):
-    #             class_acc[f] = val_cl_ac[f]
     print(val_class_cnts)
-    # print(" 0-{:.2f} {:.2f} {:.2f}".format(tendency[0][0],tendency[0][1],tendency[0][2]) + 
-    #     " | 1-{:.2f} {:.2f} {:.2f}".format(tendency[1][0],tendency[1][1],tendency[1][2]) +
-    #     " | 2-{:.2f} {:.2f} {:.2f}".format(tendency[2][0],tendency[2][1],tendency[2][2]))
-    # print(tendency[0][0:3],tendency[1][0:3],tendency[2][0:3])
+
     print('---------------------------------------------------------------------------------------------')
     end=time.time()
     print("epoch time = ",end-st)
