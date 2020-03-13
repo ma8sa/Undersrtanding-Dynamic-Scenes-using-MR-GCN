@@ -57,7 +57,7 @@ python3 rel-att-gcn_train.py		   # for training the complete model
 python3 MRGCN_test_apollo.py		   # for testing trained model
 python3 MRGCN_train_apollo.py		   # for training the complete model
 
----MRGCN+LSTM
+--MRGCN+LSTM
 python3 lstm_rgcn_test_apollo.py       # for testing trained model
 python3 lstm_rgcn_train_apollo.py      # for training the complete model
 
