@@ -80,6 +80,10 @@ python3 transfer_testing.py kitti
 To find data for MRGCN-LSTM on all datasets please go through [Temporal-MRGCN](https://github.com/ma8sa/temporal-MR-GCN)
 ### RESULTS
 ---------
+
+<img src="mean_max.png?raw=true">
+
+
 0->Move forward<br />
 1->Moving towards us<br />
 2->Parked<br />
