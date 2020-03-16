@@ -85,12 +85,12 @@ Our attention map depicts dependence between classes and relations thereby showi
 <img src="mean_max.png?raw=true">
 
 
-0->Move forward<br />
-1->Moving towards us<br />
-2->Parked<br />
-3-> lane-change(L->R)<br />
-4-> lane-change(R->L)<br />
-5-> Overtake
+0->Moving away (MVA)<br />
+1->Moving towards us (MTU)<br />
+2->Parked (PRK)<br />
+3-> lane-change(L->R) (LCR)<br />
+4-> lane-change(R->L) (LCL)<br />
+5-> Overtake (OVT)
 
 ##### Results on Apollo <br> Rel-Attentive GCN
 |  | 0 | 1 | 2 | 3 | 4 | 5 |
