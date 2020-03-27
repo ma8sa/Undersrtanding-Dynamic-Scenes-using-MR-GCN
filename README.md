@@ -47,7 +47,7 @@ And set *use_cuda = 1* in training/testing codes.
 ## Training and Testing on Apollo dataset 
 ```
 git clone https://github.com/ma8sa/Undersrtanding-Dynamic-Scenes-using-MR-GCN.git
-Undersrtanding-Dynamic-Scenes-using-MR-GCN
+cd Undersrtanding-Dynamic-Scenes-using-MR-GCN
 
 --Relational attention
 python3 rel-att-gcn_test.py			   # for testing trained model
