@@ -8,8 +8,9 @@ Our method detects and classifies objects of interest (vehicles) in a video scen
 **Note that our method is not based on classifying the ego-vehicle.**
 
 ---------------------
-<img align="center" src="cut_video.gif?raw=true">
-
+<p align="center">
+<img src="cut_video.gif?raw=true">
+</p>
 ### Dataset
 -----------
 We selected 4 main datasets to perform the experiments.
