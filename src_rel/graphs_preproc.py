@@ -1,5 +1,4 @@
 import os
-import pandas as pd
 import dgl
 from dgl import DGLGraph
 import torch
@@ -9,7 +8,6 @@ import os
 import sys
 import random
 import numpy as np
-import matplotlib.pyplot as plt
 import torch
 from torch.utils.data import DataLoader
 import math
@@ -20,7 +18,6 @@ import torch.nn.functional as F
 from dgl import DGLGraph
 import dgl.function as fn
 from functools import partial
-import matplotlib.pyplot as plt
 from random import sample
 import tqdm
 
@@ -158,8 +155,8 @@ def create_dataset(num_classes,data_path,ratio,split_meth=1,use_cuda=False):
         f.write(j+'\n')
 
 
-    # train_list = train_list[0:20]    
-    # val_list = val_list[0:20]    
+    #train_list = train_list[0:20]    
+    #val_list = val_list[0:20]    
 
     trainset = MiniGCDataset(len(train_list))
     testset = MiniGCDataset(len(val_list))

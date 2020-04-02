@@ -1,6 +1,5 @@
 #RCGCN START
 import os
-import pandas as pd
 import dgl
 from dgl import DGLGraph
 import torch
@@ -10,7 +9,6 @@ import os
 import sys
 import random
 import numpy as np
-import matplotlib.pyplot as plt
 import math
 import copy
 import torch
@@ -19,7 +17,6 @@ import torch.nn.functional as F
 from dgl import DGLGraph
 import dgl.function as fn
 from functools import partial
-import matplotlib.pyplot as plt
 from random import sample
 import tqdm
 
@@ -187,6 +184,8 @@ class RGCNLayer(nn.Module):
 
         # for relational normalization for gating
         added_norms_gate = (torch.sum(normalizations,dim=2)).unsqueeze(2)
+        if(not(self.use_cuda)):
+            added_norms_gate.cpu()
         # now in r x n
 
         adj_norm = []
@@ -197,15 +196,18 @@ class RGCNLayer(nn.Module):
             # print( (1/(1+added_norms_gate[r])).shape )
             adj_norm_rel.append( adj[r] * 1/(1+added_norms_gate[r]) ) 
             
+        for r in range(6):
+            # print(weight[r].get_device(),adj_norm_rel[r].get_device())
             if(not(self.use_cuda)):
-                weight[r] = weight[r].cpu()
+                weight[r].cpu()
                 adj_norm_rel[r] = adj_norm_rel[r].cpu()    
+            # print(weight[r].get_device(),adj_norm_rel[r].get_device())
 
         if(not(self.use_cuda)):
-            self.node_h = self.node_h.cpu()
+            self.node_h.cpu()
 
+        # print(weight[0].get_device(),adj_norm_rel[0].get_device(),self.node_h.get_device())
         for r in range(6):
-
             hrd.append(torch.matmul(self.node_h,weight[r]))
             hrs.append(torch.matmul(adj_norm_rel[r],torch.matmul(self.node_h,weight[r]) ) )
 
