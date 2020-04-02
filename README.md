@@ -8,9 +8,7 @@ Our method detects and classifies objects of interest (vehicles) in a video scen
 **Note that our method is not based on classifying the ego-vehicle.**
 
 ---------------------
-### Video GIF
-
-<img src="cut_video.gif?raw=true">
+<img align="center" src="cut_video.gif?raw=true">
 
 ### Dataset
 -----------
@@ -22,9 +20,9 @@ We selected 4 main datasets to perform the experiments.
 
 
 **Graphs for all datasets can be downloaded from [graphs](https://drive.google.com/drive/folders/1Jm3oQr-05VDTnybUakRXL-fxBXDQ5VtG?usp=sharing).<br />
-For information on how each graph is stored as a npz file, go through the README file in the same link.**
+For information on how each graph is stored as a *npz* file, go through the README file in the same link.**
 
-On apollo we have selected sequences from scene-parsing dataset and picked around 70 small sequences(each containing around 100 images) manually that include behaviors of our interest. In Honda, we have taken sequences that include various number of lane change scenarios from their H3D Dataset. Similarly on Kitti, we use tracking sequences 4,5,10 which are in line with our class requirement.
+On apollo we have selected sequences from scene-parsing dataset and picked around 70 small sequences(each containing around 100 images) manually that include behaviors of our interest. In Honda, we have taken sequences that include various number of lane change scenarios from their [H3D](https://usa.honda-ri.com/H3D) Dataset. Similarly on Kitti, we use tracking sequences 4,5,10 which are in line with our class requirement. Indian is our proprietary dataset that includes Indian road conditions and various non-generic vehicles.
 
 ### Installation
 --------------
@@ -32,17 +30,15 @@ On apollo we have selected sequences from scene-parsing dataset and picked aroun
 ```
 dgl
 pytorch == 1.2.0
-pandas
 numpy
 tqdm
 ```
 
 #### Installing without GPU:
 ```
-pip3 install requirements.txt
+pip3 install -r requirements.txt
 ```
-To install and use GPU for dgl, cuda support can be installed from their official website, [dgl](https://www.dgl.ai/pages/start.html) .<br /> 
-And set *use_cuda = 1* in training/testing codes.
+To install and use GPU for dgl, cuda support can be installed from their official website, [dgl](https://www.dgl.ai/pages/start.html). And set *use_cuda = 1* in training/testing codes.
 
 ## Training and Testing on Apollo dataset 
 ```
@@ -62,9 +58,9 @@ python3 lstm_rgcn_test_apollo.py       # for testing trained model
 python3 lstm_rgcn_train_apollo.py      # for training the complete model
 
 ```
-**NOTE** : Make sure to extract the corresponding graphs (*graphs_apollo* for MRGCN and Rel-Att-Gcn and *lstm_graphs_apollo* for MRGCN-LSTM) and place it in the same folder where you are running the code from.
+**NOTE** : Make sure to extract the corresponding graphs (*graphs_apollo* for MRGCN and Rel-Att-Gcn, *lstm_graphs_apollo* for MRGCN-LSTM) and place it in the same folder where you are running the code from.
 
-In training, *rel-att-gcn_train.py* has all the parameters to tune. *main_model.py* contains the complete model. *rgcn_layer.py* contains the MR-GCN layer implemented using attention. *graphs_preproc_apollo.py* conatains all the data preprocessing methods used. 
+In training, *rel-att-gcn_train.py* has all the parameters to tune. *main_model.py* contains the complete model. *rgcn_layer.py* contains the MR-GCN layer implemented using attention. *graphs_preproc_apollo.py* contains all the methods used for data pre-processing.
 
 ## Testing on Honda/Indian/Kitti dataset (Transfer Learning)
 ```
@@ -92,28 +88,26 @@ Our attention map depicts dependence between classes and relations thereby showi
 4-> lane-change(R->L) (LCL)<br />
 5-> Overtake (OVT)
 
-##### Results on Apollo <br> Rel-Attentive GCN
-|  | 0 | 1 | 2 | 3 | 4 | 5 |
+##### Rel-Attentive GCN
+|Results on Apollo  | 0 | 1 | 2 | 3 | 4 | 5 |
 | ------------- | ------------- | ------------ | ------------ | ------------ | ------------ | ------------ |
 | class accuracy(train)| 95 | 98 | 98 | 95 | 96 | 88 |  
 | class counts(train)  | 2667 | 621 | 3357 |393  | 428 | 525  |
 | class accuracy(val)  | 95 | 99 | 98 | 97 | 96 | 89 |
 | class counts(val)  | 814 | 237 | 1400 | 162 | 130 | 73 |
 
-##### Results on Honda tested with weights trained on Apollo
-|  | 0 | 1 | 2 | 3 | 4 |
+##### Results on Multiple datasets tested with weights trained on Apollo
+| Testing on Honda | 0 | 1 | 2 | 3 | 4 |
 | ------------- | ------------- | ------------ | ------------ | ------------ | ------------ |
 | class accuracy| 92 | 92 | 99 | 94 | 92 |  
 | class counts  | 445 | 359 | 1237 | 229 | 114 |
 
-##### Results on Kitti tested with weights trained on Apollo
-|  | 0 | 1 | 2 |
+| Testing on Kitti | 0 | 1 | 2 |
 | ------------- | ------------- | ------------ | ------------ |
 | class accuracy| 99 | 98 | 98 |
 | class counts  | 504 | 230 | 674 |
 
-##### Results on Indian tested with weights trained on Apollo
-|  | 0 | 1 | 2 |
+| Testing on Indian | 0 | 1 | 2 |
 | ------------- | ------------- | ------------ | ------------ |
 | class accuracy| 99 | 92 | 99 |
 | class counts  | 324 | 229 | 2547 |
@@ -122,11 +116,11 @@ Our attention map depicts dependence between classes and relations thereby showi
 ---------------------
 ### Base-line Implementation details (St-RNN)
 -------------
-We provide comparison with with Structural-RNN, a LSTM based graph network. Since the tasks in their paper confine only to driver-anticipation, we use one of their methods similar to our task. Specifically, we use the **detection** method of **activity-anticipation** mentioned in the paper due to the similarity in the architecture and task . We use *Vehicles* as *Humans* and *Lane Markings* as *Objects* in their architecture for our purpose. Similar to the Human-Object, Human-Human and Object-Object interactions, we observe the Vehicle-Lane, Vehicle-Vehicle and Lane-Lane interactions for all time-steps as it takes input for each time-step and for each possible relation.
+We provide comparison with with Structural-RNN, a LSTM based graph network. Since the tasks in their paper confine only to driver-anticipation, we use one of their methods similar to our task ie; we use the **detection** method of **activity-anticipation** mentioned in the paper due to the similarity in the architecture and task . We use *Vehicles* as *Humans* and *Lane Markings* as *Objects* in their architecture for our purpose. Similar to the Human-Object, Human-Human and Object-Object interactions, we observe the Vehicle-Lane, Vehicle-Vehicle and Lane-Lane interactions for all time-steps as it takes input for each time-step and for each possible relation.
 
-Different embeddings are given based on nature of object (car/lane). The embeddings are taken from our MRGCN-LSTM trained model (on Apollo). As St-RNN expects input for each object for every relation, we use zeros in case an object is not involved in relation *r*. Hence each object has an embedding for each relation whether or not it exhibits such relation. 
+Different embeddings are given based on nature of object (car/lane). The embeddings are taken from our MRGCN-LSTM trained model (on Apollo). As St-RNN expects input for each object for every relation, we use **zeros** in case an object is not involved in relation *r*. Hence each object has an embedding for each relation whether or not it exhibits that particular relation. 
 
-Our model outperforms it due to one main reason, lack of sophisticated graphical structure as in MR-GCN where information is based only on relations a node exhibits.  
+Our model outperforms it due to one main reason, lack of sophisticated graphical structure as in our MR-GCN, where information is based only on relations a node exhibits.
 
 
 | Method  | St-RNN | MRGCN -<br> LSTM | MRGCN | Rel-Att-GCN | 
