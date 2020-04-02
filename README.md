@@ -10,7 +10,7 @@ Our method detects and classifies objects of interest (vehicles) in a video scen
 ---------------------
 <p align="center">
 <img src="cut_video.gif?raw=true">
-</p>
+
 ### Dataset
 -----------
 We selected 4 main datasets to perform the experiments.
