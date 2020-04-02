@@ -15,8 +15,6 @@ import dgl.function as fn
 import torch.nn as nn
 import numpy as np
 import tqdm
-import pandas as pd
-import networkx
 
 from src_rel import graphs_preproc_transfer
 from src_rel.graphs_preproc_transfer import *
@@ -24,25 +22,25 @@ from src_rel.graphs_preproc_transfer import *
 from src_rel import main_model
 from src_rel.main_model import *
 
-# seed = 0
-# random.seed(seed)
-# torch.manual_seed(seed)
-# np.random.seed(seed)
-# torch.cuda.manual_seed_all(0)
-# torch.backends.cudnn.deterministic = True
-# torch.backends.cudnn.benchmark = False
+#seed = 0
+#random.seed(seed)
+#torch.manual_seed(seed)
+#np.random.seed(seed)
+#torch.cuda.manual_seed_all(0)
+#torch.backends.cudnn.deterministic = True
+#torch.backends.cudnn.benchmark = False
 
 data_set = sys.argv[1]
 if(data_set=='Honda'):
-	data_dir = '../../../graphs_iros_honda/'
+	data_dir = './graphs_honda/'
 if(data_set=='Kitti'):
-	data_dir = '../../../../graphs_kitti_iros/'
+	data_dir = './graphs_kitti/'
 if(data_set=='Indian'):
-	data_dir = '../../../../graphs_indian_iros/'
+	data_dir = './graphs_indian/'
 
 
 ######################### mian part of the function #######################
-use_cuda = 0
+use_cuda = 1
 if use_cuda:
         torch.cuda.set_device(0)
 
@@ -92,27 +90,19 @@ for epoch in range(num_epochs):
 
         [data_loader,test_loader] = create_batch(trainset,testset)
         print("created data")
-        whts=[]     
-
-        (N-C)/N type
-        for i in range(num_classes):
-                whts.append(((train_idx_nodes-count_train_overall[i])/train_idx_nodes))
 
         print('\n')
         print("calss counts :",count_class_val)
         print('\n')
     
-        whts = torch.from_numpy(np.array(whts))
-        whts = whts.float()
 
         optimizer = optim.Adam(model.parameters(), lr=0.001,weight_decay=1e-3)
         scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min',min_lr=0.0001,patience=5,verbose =True)       
         if(use_cuda):
-            whts = whts.cuda()
             model.cuda()
         print("Using weights on cuda")
-        loss_func = nn.CrossEntropyLoss(weight=whts)
-        # loss_func = nn.CrossEntropyLoss()
+        #loss_func = nn.CrossEntropyLoss(weight=whts)
+        loss_func = nn.CrossEntropyLoss()
 
     
     model.train()

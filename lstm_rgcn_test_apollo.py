@@ -1,5 +1,4 @@
 import os
-import pandas as pd
 import dgl
 from dgl import DGLGraph
 import torch

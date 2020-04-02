@@ -15,9 +15,7 @@ import dgl.function as fn
 import torch.nn as nn
 import numpy as np
 import tqdm
-import pandas as pd
 import networkx
-from sklearn.metrics import classification_report
 
 from src_rel import graphs_preproc
 from src_rel.graphs_preproc import *
@@ -35,7 +33,7 @@ torch.backends.cudnn.benchmark = False
         
 data_dir = './graphs_apollo/'
 ######################### mian part of the function #######################
-use_cuda = 1
+use_cuda = 0
 if use_cuda:
         torch.cuda.set_device(0)
 

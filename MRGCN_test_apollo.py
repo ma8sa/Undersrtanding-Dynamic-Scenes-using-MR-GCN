@@ -15,8 +15,6 @@ import dgl.function as fn
 import torch.nn as nn
 import numpy as np
 import tqdm
-import pandas as pd
-from sklearn.metrics import classification_report
 
 from src_MRGCN import graphs_preproc
 from src_MRGCN.graphs_preproc import *
