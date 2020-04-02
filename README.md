@@ -110,7 +110,7 @@ Our attention map depicts dependence between classes and relations thereby showi
 
 | Testing on Indian | 0 | 1 | 2 |
 | ------------- | ------------- | ------------ | ------------ |
-| class accuracy| 99 | 92 | 99 |
+| class accuracy| 99 | 97 | 99 |
 | class counts  | 324 | 229 | 2547 |
 
 
